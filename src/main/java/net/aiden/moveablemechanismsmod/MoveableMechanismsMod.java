@@ -1,6 +1,8 @@
 package net.aiden.moveablemechanismsmod;
 
 import com.mojang.logging.LogUtils;
+import net.aiden.moveablemechanismsmod.block.ModBlocks;
+import net.aiden.moveablemechanismsmod.item.ModItems;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,6 +22,9 @@ public class MoveableMechanismsMod
     public MoveableMechanismsMod()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 
