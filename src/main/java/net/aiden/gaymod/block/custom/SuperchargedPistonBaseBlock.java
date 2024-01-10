@@ -1,4 +1,4 @@
-package net.aiden.moveablemechanismsmod.block.custom;
+package net.aiden.gaymod.block.custom;
 
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 

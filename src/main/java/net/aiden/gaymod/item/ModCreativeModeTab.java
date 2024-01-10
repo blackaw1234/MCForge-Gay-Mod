@@ -1,6 +1,6 @@
-package net.aiden.moveablemechanismsmod.item;
+package net.aiden.gaymod.item;
 
-import net.aiden.moveablemechanismsmod.block.ModBlocks;
+import net.aiden.gaymod.block.ModBlocks;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;

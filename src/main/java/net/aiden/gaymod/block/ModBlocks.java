@@ -1,9 +1,9 @@
-package net.aiden.moveablemechanismsmod.block;
+package net.aiden.gaymod.block;
 
-import net.aiden.moveablemechanismsmod.MoveableMechanismsMod;
-import net.aiden.moveablemechanismsmod.item.ModCreativeModeTab;
-import net.aiden.moveablemechanismsmod.block.custom.SuperchargedPistonBaseBlock;
-import net.aiden.moveablemechanismsmod.item.ModItems;
+import net.aiden.gaymod.GayMod;
+import net.aiden.gaymod.item.ModCreativeModeTab;
+import net.aiden.gaymod.block.custom.SuperchargedPistonBaseBlock;
+import net.aiden.gaymod.item.ModItems;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
-            DeferredRegister.create(ForgeRegistries.BLOCKS, MoveableMechanismsMod.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.BLOCKS, GayMod.MOD_ID);
 
     public static final RegistryObject<Block> SUPERCHARGED_PISTON_BASE_BLOCK = registerBlock("supercharged_piston_base_block",
             () -> new SuperchargedPistonBaseBlock(false, BlockBehaviour.Properties.of(Material.PISTON)

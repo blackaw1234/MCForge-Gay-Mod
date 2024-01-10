@@ -1,8 +1,8 @@
-package net.aiden.moveablemechanismsmod;
+package net.aiden.gaymod;
 
 import com.mojang.logging.LogUtils;
-import net.aiden.moveablemechanismsmod.block.ModBlocks;
-import net.aiden.moveablemechanismsmod.item.ModItems;
+import net.aiden.gaymod.block.ModBlocks;
+import net.aiden.gaymod.item.ModItems;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -13,13 +13,13 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod(MoveableMechanismsMod.MOD_ID)
-public class MoveableMechanismsMod
+@Mod(GayMod.MOD_ID)
+public class GayMod
 {
-    public static final String MOD_ID = "moveablemechanismsmod";
+    public static final String MOD_ID = "gaymod";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public MoveableMechanismsMod()
+    public GayMod()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 

@@ -1,6 +1,6 @@
-package net.aiden.moveablemechanismsmod.item;
+package net.aiden.gaymod.item;
 
-import net.aiden.moveablemechanismsmod.MoveableMechanismsMod;
+import net.aiden.gaymod.GayMod;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -8,7 +8,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(ForgeRegistries.ITEMS, MoveableMechanismsMod.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.ITEMS, GayMod.MOD_ID);
 
     public static void register(IEventBus eventBus)
     {
