@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/piston_extended",
+  "textures": {
+    "bottom": "gaymod:block/supercharged_piston_bottom",
+    "side": "gaymod:block/supercharged_piston_side",
+    "inside": "gaymod:block/supercharged_piston_inner"
+  }
+}

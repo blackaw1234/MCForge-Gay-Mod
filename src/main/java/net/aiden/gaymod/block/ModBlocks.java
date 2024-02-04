@@ -21,9 +21,9 @@ public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(ForgeRegistries.BLOCKS, GayMod.MOD_ID);
 
-    public static final RegistryObject<Block> SUPERCHARGED_PISTON_BASE_BLOCK = registerBlock("supercharged_piston_base_block",
+    public static final RegistryObject<Block> SUPERCHARGED_PISTON_BASE_BLOCK = registerBlock("supercharged_piston",
             () -> new SuperchargedPistonBaseBlock(false, BlockBehaviour.Properties.of(Material.PISTON)
-                    .strength(6f).requiresCorrectToolForDrops()), ModCreativeModeTab.MOVEABLE_MECHANISMS_TAB);
+                    .strength(6f).requiresCorrectToolForDrops()), ModCreativeModeTab.GAY_TAB);
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab)
     {
