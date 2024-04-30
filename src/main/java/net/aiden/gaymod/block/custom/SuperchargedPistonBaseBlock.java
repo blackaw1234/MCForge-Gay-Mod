@@ -1,23 +1,27 @@
 package net.aiden.gaymod.block.custom;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.piston.MovingPistonBlock;
-import net.minecraft.world.level.block.piston.PistonBaseBlock;
-import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
-import net.minecraft.world.level.block.piston.PistonStructureResolver;
+import net.minecraft.world.level.block.piston.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.PistonType;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 
 import static net.aiden.gaymod.block.ModBlocks.SUPERCHARGED_PISTON_HEAD_BLOCK;
 
@@ -27,6 +31,7 @@ import static net.aiden.gaymod.block.ModBlocks.SUPERCHARGED_PISTON_HEAD_BLOCK;
  * @author Aiden
  */
 public class SuperchargedPistonBaseBlock extends PistonBaseBlock {
+    private final boolean isSticky;
     /**
      * Constructs a SuperchargedPistonBaseBlock object.
      *
@@ -35,82 +40,193 @@ public class SuperchargedPistonBaseBlock extends PistonBaseBlock {
      */
     public SuperchargedPistonBaseBlock(boolean isSticky, Properties properties) {
         super(isSticky, properties);
+        this.isSticky = isSticky;
     }
 
-    private boolean moveBlock(Level level, BlockPos basePos, Direction pumpDirection) {
-        BlockPos headPos = basePos.relative(pumpDirection);
+    private boolean moveBlocks(Level level, BlockPos basePos, Direction pumpDirection, boolean b) {
+        BlockPos blockpos = basePos.relative(pumpDirection);
+        if (!b && level.getBlockState(blockpos).is(SUPERCHARGED_PISTON_HEAD_BLOCK.get())) {
+            level.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 20);
+        }
 
-        PistonStructureResolver pistonStructureResolver = new PistonStructureResolver(level, basePos, pumpDirection, true);
-        if (!pistonStructureResolver.resolve()) {
+        PistonStructureResolver pistonstructureresolver = new PistonStructureResolver(level, basePos, pumpDirection, b);
+        if (!pistonstructureresolver.resolve()) {
             return false;
         } else {
-            List<BlockPos> locationsToDestroy = pistonStructureResolver.getToDestroy();
+            Map<BlockPos, BlockState> map = Maps.newHashMap();
+            List<BlockPos> list = pistonstructureresolver.getToPush();
+            List<BlockState> list1 = Lists.newArrayList();
 
-            for (int i = locationsToDestroy.size() - 1; i >= 0; --i) {
-                BlockPos locationToDestroy = locationsToDestroy.get(i);
-                BlockState blockStateToDestroy = level.getBlockState(locationToDestroy);
-                BlockEntity blockEntityToDestroy = blockStateToDestroy.hasBlockEntity() ? level.getBlockEntity(locationToDestroy) : null;
-
-                dropResources(blockStateToDestroy, level, locationToDestroy, blockEntityToDestroy);
-                level.setBlock(locationToDestroy, Blocks.AIR.defaultBlockState(), 18);
-                level.gameEvent(GameEvent.BLOCK_DESTROY, locationToDestroy, GameEvent.Context.of(blockStateToDestroy));
-                if (!blockStateToDestroy.is(BlockTags.FIRE)) {
-                    level.addDestroyBlockEffect(locationToDestroy, blockStateToDestroy);
-                }
+            for(int i = 0; i < list.size(); ++i) {
+                BlockPos blockpos1 = list.get(i);
+                BlockState blockstate = level.getBlockState(blockpos1);
+                list1.add(blockstate);
+                map.put(blockpos1, blockstate);
             }
 
-            PistonType pistonType = PistonType.DEFAULT;
-            BlockState pumpHeadState = SUPERCHARGED_PISTON_HEAD_BLOCK.get().defaultBlockState().setValue(SuperchargedPistonHeadBlock.FACING, pumpDirection).setValue(SuperchargedPistonHeadBlock.TYPE, pistonType);
-            BlockState movingPistonBlockState = Blocks.MOVING_PISTON.defaultBlockState().setValue(MovingPistonBlock.FACING, pumpDirection).setValue(MovingPistonBlock.TYPE, PistonType.DEFAULT);
+            List<BlockPos> list2 = pistonstructureresolver.getToDestroy();
+            BlockState[] ablockstate = new BlockState[list.size() + list2.size()];
+            Direction direction = b ? pumpDirection : pumpDirection.getOpposite();
+            int j = 0;
 
-            level.setBlock(headPos, movingPistonBlockState, 68);
-            level.setBlockEntity(MovingPistonBlock.newMovingBlockEntity(headPos, movingPistonBlockState, pumpHeadState, pumpDirection, true, true));
+            for(int k = list2.size() - 1; k >= 0; --k) {
+                BlockPos blockpos2 = list2.get(k);
+                BlockState blockstate1 = level.getBlockState(blockpos2);
+                BlockEntity blockentity = blockstate1.hasBlockEntity() ? level.getBlockEntity(blockpos2) : null;
+                dropResources(blockstate1, level, blockpos2, blockentity);
+                level.setBlock(blockpos2, Blocks.AIR.defaultBlockState(), 18);
+                level.gameEvent(GameEvent.BLOCK_DESTROY, blockpos2, GameEvent.Context.of(blockstate1));
+                if (!blockstate1.is(BlockTags.FIRE)) {
+                    level.addDestroyBlockEffect(blockpos2, blockstate1);
+                }
 
-            level.updateNeighborsAt(headPos, SUPERCHARGED_PISTON_HEAD_BLOCK.get());
+                ablockstate[j++] = blockstate1;
+            }
+
+            for(int l = list.size() - 1; l >= 0; --l) {
+                BlockPos blockpos3 = list.get(l);
+                BlockState blockstate5 = level.getBlockState(blockpos3);
+                blockpos3 = blockpos3.relative(direction);
+                map.remove(blockpos3);
+                BlockState blockstate8 = Blocks.MOVING_PISTON.defaultBlockState().setValue(FACING, pumpDirection);
+                level.setBlock(blockpos3, blockstate8, 68);
+                level.setBlockEntity(MovingPistonBlock.newMovingBlockEntity(blockpos3, blockstate8, list1.get(l), pumpDirection, b, false));
+                ablockstate[j++] = blockstate5;
+            }
+
+            if (b) {
+                PistonType pistontype = this.isSticky ? PistonType.STICKY : PistonType.DEFAULT;
+                BlockState blockstate4 = SUPERCHARGED_PISTON_HEAD_BLOCK.get().defaultBlockState().setValue(SuperchargedPistonHeadBlock.FACING, pumpDirection).setValue(SuperchargedPistonHeadBlock.TYPE, pistontype);
+                BlockState blockstate6 = Blocks.MOVING_PISTON.defaultBlockState().setValue(MovingPistonBlock.FACING, pumpDirection).setValue(MovingPistonBlock.TYPE, this.isSticky ? PistonType.STICKY : PistonType.DEFAULT);
+                map.remove(blockpos);
+                level.setBlock(blockpos, blockstate6, 68);
+                level.setBlockEntity(MovingPistonBlock.newMovingBlockEntity(blockpos, blockstate6, blockstate4, pumpDirection, true, true));
+            }
+
+            BlockState blockstate3 = Blocks.AIR.defaultBlockState();
+
+            for(BlockPos blockpos4 : map.keySet()) {
+                level.setBlock(blockpos4, blockstate3, 82);
+            }
+
+            for(Map.Entry<BlockPos, BlockState> entry : map.entrySet()) {
+                BlockPos blockpos5 = entry.getKey();
+                BlockState blockstate2 = entry.getValue();
+                blockstate2.updateIndirectNeighbourShapes(level, blockpos5, 2);
+                blockstate3.updateNeighbourShapes(level, blockpos5, 2);
+                blockstate3.updateIndirectNeighbourShapes(level, blockpos5, 2);
+            }
+
+            j = 0;
+
+            for(int i1 = list2.size() - 1; i1 >= 0; --i1) {
+                BlockState blockstate7 = ablockstate[j++];
+                BlockPos blockpos6 = list2.get(i1);
+                blockstate7.updateIndirectNeighbourShapes(level, blockpos6, 2);
+                level.updateNeighborsAt(blockpos6, blockstate7.getBlock());
+            }
+
+            for(int j1 = list.size() - 1; j1 >= 0; --j1) {
+                level.updateNeighborsAt(list.get(j1), ablockstate[j++].getBlock());
+            }
+
+            if (b) {
+                level.updateNeighborsAt(blockpos, SUPERCHARGED_PISTON_HEAD_BLOCK.get());
+            }
 
             return true;
         }
     }
 
-    @Override
-    public boolean triggerEvent(BlockState baseState, Level level, @NotNull BlockPos basePos, int extensionFlag, int direction) {
-        Direction pumpDirection = baseState.getValue(FACING);
-
-        // pump is not opposed by a powered piston
-        if (extensionFlag == TRIGGER_EXTEND) {
-            // trigger no event if pump is already extending
-            if (net.minecraftforge.event.ForgeEventFactory.onPistonMovePre(level, basePos, pumpDirection, true)) {
-                return false;
+    private boolean getNeighborSignal(Level p_60178_, BlockPos p_60179_, Direction p_60180_) {
+        for(Direction direction : Direction.values()) {
+            if (direction != p_60180_ && p_60178_.hasSignal(p_60179_.relative(direction), direction)) {
+                return true;
             }
-            // trigger no event if pump cannot push the blocks in front of it
-            if (!this.moveBlock(level, basePos, pumpDirection)) {
-                return false;
-            }
-
-            level.setBlock(basePos, baseState.setValue(EXTENDED, true), 67);//replace the base with an extended version of itself
-            level.playSound(null, basePos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.25F + 0.6F);
-            level.gameEvent(null, GameEvent.PISTON_EXTEND, basePos);
-        } else {
-            // pump is contracting
-            if (net.minecraftforge.event.ForgeEventFactory.onPistonMovePre(level, basePos, pumpDirection, false))
-                return false;//trigger no event if piston is already contracting
-            BlockEntity headEntity = level.getBlockEntity(basePos.relative(pumpDirection));
-            // if the block entity at the head's position is a PistonMovingBlockEntity,
-            if (headEntity instanceof PistonMovingBlockEntity) ((PistonMovingBlockEntity) headEntity).finalTick();
-
-            BlockState blockstate = Blocks.MOVING_PISTON.defaultBlockState().setValue(MovingPistonBlock.FACING, pumpDirection).setValue(MovingPistonBlock.TYPE, PistonType.DEFAULT);
-            level.setBlock(basePos, blockstate, 20);
-            level.setBlockEntity(MovingPistonBlock.newMovingBlockEntity(basePos, blockstate, this.defaultBlockState().setValue
-                    (FACING, Direction.from3DDataValue(direction & 7)), pumpDirection, false, true));
-            level.blockUpdated(basePos, blockstate.getBlock());// tell the level that a moving piston got updated at the position of the piston's base
-            blockstate.updateNeighbourShapes(level, basePos, 2);
-            level.removeBlock(basePos.relative(pumpDirection), false);// remove the piston head
-
-            level.playSound(null, basePos, SoundEvents.PISTON_CONTRACT, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.15F + 0.6F);
-            level.gameEvent(null, GameEvent.PISTON_CONTRACT, basePos);
         }
 
-        net.minecraftforge.event.ForgeEventFactory.onPistonMovePost(level, basePos, pumpDirection, (extensionFlag == TRIGGER_EXTEND));
+        if (p_60178_.hasSignal(p_60179_, Direction.DOWN)) {
+            return true;
+        } else {
+            BlockPos blockpos = p_60179_.above();
+
+            for(Direction direction1 : Direction.values()) {
+                if (direction1 != Direction.DOWN && p_60178_.hasSignal(blockpos.relative(direction1), direction1)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    @Override
+    public boolean triggerEvent(BlockState baseState, Level level, @NotNull BlockPos basePos, int extensionFlag, int direction) {
+        Direction pistonDirection = baseState.getValue(FACING);
+        if (!level.isClientSide) {
+            boolean flag = getNeighborSignal(level, basePos, pistonDirection);
+            if (flag && (extensionFlag == 1 || extensionFlag == 2)) {
+                level.setBlock(basePos, baseState.setValue(EXTENDED, Boolean.valueOf(true)), 2);
+                return false;
+            }
+
+            if (!flag && extensionFlag == 0) {
+                return false;
+            }
+        }
+
+        if (extensionFlag == 0) {
+            if (ForgeEventFactory.onPistonMovePre(level, basePos, pistonDirection, true)) return false;
+            if (!moveBlocks(level, basePos, pistonDirection, true)) {
+                return false;
+            }
+
+            level.setBlock(basePos, baseState.setValue(EXTENDED, Boolean.valueOf(true)), 67);
+            level.playSound((Player)null, basePos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.25F + 0.6F);
+            level.gameEvent((Entity)null, GameEvent.PISTON_EXTEND, basePos);
+        } else if (extensionFlag == 1 || extensionFlag == 2) {
+            if (ForgeEventFactory.onPistonMovePre(level, basePos, pistonDirection, false)) return false;
+            BlockEntity blockentity1 = level.getBlockEntity(basePos.relative(pistonDirection));
+            if (blockentity1 instanceof PistonMovingBlockEntity) {
+                ((PistonMovingBlockEntity)blockentity1).finalTick();
+            }
+
+            BlockState blockstate = Blocks.MOVING_PISTON.defaultBlockState().setValue(MovingPistonBlock.FACING, pistonDirection).setValue(MovingPistonBlock.TYPE, this.isSticky ? PistonType.STICKY : PistonType.DEFAULT);
+            level.setBlock(basePos, blockstate, 20);
+            level.setBlockEntity(MovingPistonBlock.newMovingBlockEntity(basePos, blockstate, defaultBlockState().setValue(FACING, Direction.from3DDataValue(direction & 7)), pistonDirection, false, true));
+            level.blockUpdated(basePos, blockstate.getBlock());
+            blockstate.updateNeighbourShapes(level, basePos, 2);
+            if (this.isSticky) {
+                BlockPos blockpos = basePos.offset(pistonDirection.getStepX() * 2, pistonDirection.getStepY() * 2, pistonDirection.getStepZ() * 2);
+                BlockState blockstate1 = level.getBlockState(blockpos);
+                boolean flag1 = false;
+                if (blockstate1.is(Blocks.MOVING_PISTON)) {
+                    BlockEntity blockentity = level.getBlockEntity(blockpos);
+                    if (blockentity instanceof PistonMovingBlockEntity) {
+                        PistonMovingBlockEntity pistonmovingblockentity = (PistonMovingBlockEntity)blockentity;
+                        if (pistonmovingblockentity.getDirection() == pistonDirection && pistonmovingblockentity.isExtending()) {
+                            pistonmovingblockentity.finalTick();
+                            flag1 = true;
+                        }
+                    }
+                }
+
+                if (!flag1) {
+                    if (extensionFlag != 1 || blockstate1.isAir() || !isPushable(blockstate1, level, blockpos, pistonDirection.getOpposite(), false, pistonDirection) || blockstate1.getPistonPushReaction() != PushReaction.NORMAL && !blockstate1.is(Blocks.PISTON) && !blockstate1.is(Blocks.STICKY_PISTON)) {
+                        level.removeBlock(basePos.relative(pistonDirection), false);
+                    } else {
+                        moveBlocks(level, basePos, pistonDirection, false);
+                    }
+                }
+            } else {
+                level.removeBlock(basePos.relative(pistonDirection), false);
+            }
+
+            level.playSound((Player)null, basePos, SoundEvents.PISTON_CONTRACT, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.15F + 0.6F);
+            level.gameEvent((Entity)null, GameEvent.PISTON_CONTRACT, basePos);
+        }
+
+        ForgeEventFactory.onPistonMovePost(level, basePos, pistonDirection, (extensionFlag == 0));
         return true;
     }
 }
