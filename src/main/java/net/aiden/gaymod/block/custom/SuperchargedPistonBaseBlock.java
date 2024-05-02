@@ -4,12 +4,16 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.*;
@@ -49,7 +53,7 @@ public class SuperchargedPistonBaseBlock extends PistonBaseBlock {
             level.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 20);
         }
 
-        PistonStructureResolver pistonstructureresolver = new PistonStructureResolver(level, basePos, pumpDirection, b);
+        SuperchargedPistonStructureResolver pistonstructureresolver = new SuperchargedPistonStructureResolver(level, basePos, pumpDirection, b);
         if (!pistonstructureresolver.resolve()) {
             return false;
         } else {
@@ -136,6 +140,57 @@ public class SuperchargedPistonBaseBlock extends PistonBaseBlock {
 
             return true;
         }
+    }
+
+    @Override
+    public void setPlacedBy(Level p_60172_, BlockPos p_60173_, BlockState p_60174_, LivingEntity p_60175_, ItemStack p_60176_) {
+        if (!p_60172_.isClientSide) {
+            checkIfExtend(p_60172_, p_60173_, p_60174_);
+        }
+    }
+
+    @Override
+    public void neighborChanged(BlockState p_60198_, Level p_60199_, BlockPos p_60200_, Block p_60201_, BlockPos p_60202_, boolean p_60203_) {
+        if (!p_60199_.isClientSide) {
+            checkIfExtend(p_60199_, p_60200_, p_60198_);
+        }
+    }
+
+    @Override
+    public void onPlace(BlockState p_60225_, Level p_60226_, BlockPos p_60227_, BlockState p_60228_, boolean p_60229_) {
+        if (!p_60228_.is(p_60225_.getBlock())) {
+            if (!p_60226_.isClientSide && p_60226_.getBlockEntity(p_60227_) == null) {
+                checkIfExtend(p_60226_, p_60227_, p_60225_);
+            }
+        }
+    }
+
+
+
+    private void checkIfExtend(Level p_60168_, BlockPos p_60169_, BlockState p_60170_) {
+        Direction direction = p_60170_.getValue(FACING);
+        boolean flag = getNeighborSignal(p_60168_, p_60169_, direction);
+        if (flag && !p_60170_.getValue(EXTENDED)) {
+            if ((new SuperchargedPistonStructureResolver(p_60168_, p_60169_, direction, true)).resolve()) {
+                p_60168_.blockEvent(p_60169_, this, 0, direction.get3DDataValue());
+            }
+        } else if (!flag && p_60170_.getValue(EXTENDED)) {
+            BlockPos blockpos = p_60169_.relative(direction, 2);
+            BlockState blockstate = p_60168_.getBlockState(blockpos);
+            int i = 1;
+            if (blockstate.is(Blocks.MOVING_PISTON) && blockstate.getValue(FACING) == direction) {
+                BlockEntity blockentity = p_60168_.getBlockEntity(blockpos);
+                if (blockentity instanceof PistonMovingBlockEntity) {
+                    PistonMovingBlockEntity pistonmovingblockentity = (PistonMovingBlockEntity)blockentity;
+                    if (pistonmovingblockentity.isExtending() && (pistonmovingblockentity.getProgress(0.0F) < 0.5F || p_60168_.getGameTime() == pistonmovingblockentity.getLastTicked() || ((ServerLevel)p_60168_).isHandlingTick())) {
+                        i = 2;
+                    }
+                }
+            }
+
+            p_60168_.blockEvent(p_60169_, this, i, direction.get3DDataValue());
+        }
+
     }
 
     private boolean getNeighborSignal(Level p_60178_, BlockPos p_60179_, Direction p_60180_) {
