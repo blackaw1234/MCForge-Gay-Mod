@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
-import static net.aiden.gaymod.block.ModBlocks.SUPERCHARGED_PISTON_HEAD_BLOCK;
+import static net.aiden.gaymod.block.ModBlocks.*;
 
 /**
  * A piston that can push many more blocks than a normal piston, but requires more redstone signals to do so.
@@ -211,6 +211,45 @@ public class SuperchargedPistonBaseBlock extends PistonBaseBlock {
                 }
             }
 
+            return false;
+        }
+    }
+
+    public static boolean isPushable(BlockState p_60205_, Level p_60206_, BlockPos p_60207_, Direction p_60208_, boolean p_60209_, Direction p_60210_) {
+        if (p_60207_.getY() >= p_60206_.getMinBuildHeight() && p_60207_.getY() <= p_60206_.getMaxBuildHeight() - 1 && p_60206_.getWorldBorder().isWithinBounds(p_60207_)) {
+            if (p_60205_.isAir()) {
+                return true;
+            } else if (!p_60205_.is(Blocks.OBSIDIAN) && !p_60205_.is(Blocks.CRYING_OBSIDIAN) && !p_60205_.is(Blocks.RESPAWN_ANCHOR) && !p_60205_.is(Blocks.REINFORCED_DEEPSLATE)) {
+                if (p_60208_ == Direction.DOWN && p_60207_.getY() == p_60206_.getMinBuildHeight()) {
+                    return false;
+                } else if (p_60208_ == Direction.UP && p_60207_.getY() == p_60206_.getMaxBuildHeight() - 1) {
+                    return false;
+                } else {
+                    if (!(p_60205_.is(Blocks.PISTON) || p_60205_.is(Blocks.STICKY_PISTON) ||
+                            p_60205_.is(SUPERCHARGED_PISTON_BASE_BLOCK.get()) ||
+                            p_60205_.is(STICKY_SUPERCHARGED_PISTON_BASE_BLOCK.get()))) {
+                        if (p_60205_.getDestroySpeed(p_60206_, p_60207_) == -1.0F) {
+                            return false;
+                        }
+
+                        switch (p_60205_.getPistonPushReaction()) {
+                            case BLOCK:
+                                return false;
+                            case DESTROY:
+                                return p_60209_;
+                            case PUSH_ONLY:
+                                return p_60208_ == p_60210_;
+                        }
+                    } else if (p_60205_.getValue(EXTENDED)) {
+                        return false;
+                    }
+
+                    return !p_60205_.hasBlockEntity();
+                }
+            } else {
+                return false;
+            }
+        } else {
             return false;
         }
     }

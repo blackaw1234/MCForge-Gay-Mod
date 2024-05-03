@@ -43,7 +43,7 @@ public class SuperchargedPistonStructureResolver extends PistonStructureResolver
         this.toPush.clear();
         this.toDestroy.clear();
         BlockState blockstate = this.level.getBlockState(this.startPos);
-        if (!PistonBaseBlock.isPushable(blockstate, this.level, this.startPos, this.pushDirection, false, this.pistonDirection)) {
+        if (!SuperchargedPistonBaseBlock.isPushable(blockstate, this.level, this.startPos, this.pushDirection, false, this.pistonDirection)) {
             if (this.extending && blockstate.getPistonPushReaction() == PushReaction.DESTROY) {
                 this.toDestroy.add(this.startPos);
                 return true;
@@ -84,7 +84,7 @@ public class SuperchargedPistonStructureResolver extends PistonStructureResolver
                     BlockPos blockpos = p_60434_.relative(this.pushDirection.getOpposite(), i);
                     oldState = blockstate;
                     blockstate = this.level.getBlockState(blockpos);
-                    if (blockstate.isAir() || !(oldState.canStickTo(blockstate) && blockstate.canStickTo(oldState)) || !PistonBaseBlock.isPushable(blockstate, this.level, blockpos, this.pushDirection, false, this.pushDirection.getOpposite()) || blockpos.equals(this.pistonPos)) {
+                    if (blockstate.isAir() || !(oldState.canStickTo(blockstate) && blockstate.canStickTo(oldState)) || !SuperchargedPistonBaseBlock.isPushable(blockstate, this.level, blockpos, this.pushDirection, false, this.pushDirection.getOpposite()) || blockpos.equals(this.pistonPos)) {
                         break;
                     }
 
