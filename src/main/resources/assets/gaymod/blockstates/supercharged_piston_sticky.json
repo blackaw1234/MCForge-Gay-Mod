@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "extended=false,facing=down": {
+      "model": "gaymod:block/supercharged_piston_sticky",
+      "x": 90
+    },
+    "extended=false,facing=east": {
+      "model": "gaymod:block/supercharged_piston_sticky",
+      "y": 90
+    },
+    "extended=false,facing=north": {
+      "model": "gaymod:block/supercharged_piston_sticky"
+    },
+    "extended=false,facing=south": {
+      "model": "gaymod:block/supercharged_piston_sticky",
+      "y": 180
+    },
+    "extended=false,facing=up": {
+      "model": "gaymod:block/supercharged_piston_sticky",
+      "x": 270
+    },
+    "extended=false,facing=west": {
+      "model": "gaymod:block/supercharged_piston_sticky",
+      "y": 270
+    },
+    "extended=true,facing=down": {
+      "model": "gaymod:block/supercharged_piston_base",
+      "x": 90
+    },
+    "extended=true,facing=east": {
+      "model": "gaymod:block/supercharged_piston_base",
+      "y": 90
+    },
+    "extended=true,facing=north": {
+      "model": "gaymod:block/supercharged_piston_base"
+    },
+    "extended=true,facing=south": {
+      "model": "gaymod:block/supercharged_piston_base",
+      "y": 180
+    },
+    "extended=true,facing=up": {
+      "model": "gaymod:block/supercharged_piston_base",
+      "x": 270
+    },
+    "extended=true,facing=west": {
+      "model": "gaymod:block/supercharged_piston_base",
+      "y": 270
+    }
+  }
+}

@@ -7,7 +7,9 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.piston.PistonHeadBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.PistonType;
 
+import static net.aiden.gaymod.block.ModBlocks.STICKY_SUPERCHARGED_PISTON_BASE_BLOCK;
 import static net.aiden.gaymod.block.ModBlocks.SUPERCHARGED_PISTON_BASE_BLOCK;
 
 public class SuperchargedPistonHeadBlock extends PistonHeadBlock {
@@ -20,7 +22,7 @@ public class SuperchargedPistonHeadBlock extends PistonHeadBlock {
         //Checks if type of block under matches, then if the base is extended, and then if it's aligned with the head
         //IMPORTANT: Checks MUST be performed in such a way to prevent checking for extended value in a block that
         //doesn't have it (e.g. checking a moving piston during contraction)
-        return baseState.is(SUPERCHARGED_PISTON_BASE_BLOCK.get()) && baseState.getValue(SuperchargedPistonBaseBlock.EXTENDED) && baseState.getValue(FACING) == headState.getValue(FACING);
+        return baseState.is(headState.getValue(TYPE) == PistonType.DEFAULT ? SUPERCHARGED_PISTON_BASE_BLOCK.get() : STICKY_SUPERCHARGED_PISTON_BASE_BLOCK.get()) && baseState.getValue(SuperchargedPistonBaseBlock.EXTENDED) && baseState.getValue(FACING) == headState.getValue(FACING);
     }
 
     public void playerWillDestroy(Level p_60265_, BlockPos p_60266_, BlockState p_60267_, Player p_60268_) {
