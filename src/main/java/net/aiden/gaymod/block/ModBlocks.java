@@ -24,7 +24,7 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> SUPERCHARGED_PISTON_BASE_BLOCK = registerBlock("supercharged_piston",
             () -> new SuperchargedPistonBaseBlock(false, BlockBehaviour.Properties.of(Material.PISTON)
-                    .strength(6f).requiresCorrectToolForDrops()), ModCreativeModeTab.GAY_TAB);
+                    .strength(6f)), ModCreativeModeTab.GAY_TAB);
 
     public static final RegistryObject<Block> STICKY_SUPERCHARGED_PISTON_BASE_BLOCK = registerBlock("supercharged_piston_sticky",
             () -> new SuperchargedPistonBaseBlock(true, BlockBehaviour.Properties.of(Material.PISTON)
@@ -32,7 +32,7 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> SUPERCHARGED_PISTON_HEAD_BLOCK = registerBlock("supercharged_piston_head",
             () -> new SuperchargedPistonHeadBlock( BlockBehaviour.Properties.of(Material.PISTON)
-                    .strength(6f).requiresCorrectToolForDrops()), null);
+                    .strength(6f)), null);
 
     public static final RegistryObject<Block> STICKY_SUPERCHARGED_PISTON_HEAD_BLOCK = registerBlock("supercharged_piston_head_sticky",
             () -> new SuperchargedPistonHeadBlock( BlockBehaviour.Properties.of(Material.PISTON)
