@@ -36,7 +36,7 @@ public class ModBlocks {
                     .strength(6f)), null);
 
     public static final RegistryObject<Block> CANNABIS_BLOCK = registerBlock("cannabis_block",
-            () -> new CannabisBlock(BlockBehaviour.Properties.of(Material.VEGETABLE)), null);
+            () -> new CannabisBlock(BlockBehaviour.Properties.of(Material.PLANT)), null);
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab)
     {
