@@ -1,6 +1,7 @@
 package net.aiden.gaymod.block;
 
 import net.aiden.gaymod.GayMod;
+import net.aiden.gaymod.block.custom.CannabisBlock;
 import net.aiden.gaymod.block.custom.SuperchargedPistonHeadBlock;
 import net.aiden.gaymod.item.ModCreativeModeTab;
 import net.aiden.gaymod.block.custom.SuperchargedPistonBaseBlock;
@@ -33,6 +34,9 @@ public class ModBlocks {
     public static final RegistryObject<Block> SUPERCHARGED_PISTON_HEAD_BLOCK = registerBlock("supercharged_piston_head",
             () -> new SuperchargedPistonHeadBlock( BlockBehaviour.Properties.of(Material.PISTON)
                     .strength(6f)), null);
+
+    public static final RegistryObject<Block> CANNABIS_BLOCK = registerBlock("cannabis_block",
+            () -> new CannabisBlock(BlockBehaviour.Properties.of(Material.VEGETABLE)), null);
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab)
     {
