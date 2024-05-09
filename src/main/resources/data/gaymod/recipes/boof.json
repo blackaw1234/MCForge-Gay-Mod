@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "gaymod:cannabis"
+    }
+  ],
+  "result": {
+    "item": "gaymod:boof"
+  }
+}
