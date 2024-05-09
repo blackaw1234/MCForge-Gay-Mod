@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "gaymod:block/cannabis_block_stage3"
+  }
+}
