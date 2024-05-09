@@ -1,6 +1,7 @@
 {
+  "render_type": "minecraft:cutout",
   "parent": "minecraft:block/crop",
   "textures": {
-    "crop": "gaymod:block/cannabis_block_stage0"
+    "crop": "minecraft:block/wheat_stage0"
   }
 }
