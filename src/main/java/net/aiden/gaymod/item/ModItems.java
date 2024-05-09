@@ -1,6 +1,7 @@
 package net.aiden.gaymod.item;
 
 import net.aiden.gaymod.GayMod;
+import net.aiden.gaymod.item.custom.BoofItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
@@ -23,6 +24,8 @@ public class ModItems {
             () -> new ItemNameBlockItem(CANNABIS_BLOCK.get(),
             (new Item.Properties()).tab(ModCreativeModeTab.GAY_TAB)));
 
+    public static final RegistryObject<Item> BOOF = ITEMS.register("boof",
+            () -> new BoofItem(new Item.Properties().tab(ModCreativeModeTab.GAY_TAB)));
 
 
     public static void register(IEventBus eventBus)
