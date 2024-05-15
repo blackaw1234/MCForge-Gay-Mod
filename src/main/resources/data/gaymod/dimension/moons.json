@@ -7,7 +7,7 @@
       "type": "minecraft:multi_noise",
       "biomes": [
         {
-          "biome": "minecraft:flower_forest",
+          "biome": "gaymod:asteroid_field",
           "parameters": {
             "continentalness": -1,
             "depth": 0,
