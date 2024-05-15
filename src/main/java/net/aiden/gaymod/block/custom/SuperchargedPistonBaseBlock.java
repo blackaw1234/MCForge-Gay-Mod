@@ -259,17 +259,17 @@ public class SuperchargedPistonBaseBlock extends PistonBaseBlock {
         Direction pistonDirection = baseState.getValue(FACING);
         if (!level.isClientSide) {
             boolean flag = getNeighborSignal(level, basePos, pistonDirection);
-            if (flag && (extensionFlag == 1 || extensionFlag == 2)) {
+            if (flag && (extensionFlag == PistonBaseBlock.TRIGGER_CONTRACT || extensionFlag == PistonBaseBlock.TRIGGER_DROP)) {
                 level.setBlock(basePos, baseState.setValue(EXTENDED, Boolean.valueOf(true)), 2);
                 return false;
             }
 
-            if (!flag && extensionFlag == 0) {
+            if (!flag && extensionFlag == PistonBaseBlock.TRIGGER_EXTEND) {
                 return false;
             }
         }
 
-        if (extensionFlag == 0) {
+        if (extensionFlag == PistonBaseBlock.TRIGGER_EXTEND) {
             if (ForgeEventFactory.onPistonMovePre(level, basePos, pistonDirection, true)) return false;
             if (!moveBlocks(level, basePos, pistonDirection, true)) {
                 return false;
@@ -278,7 +278,7 @@ public class SuperchargedPistonBaseBlock extends PistonBaseBlock {
             level.setBlock(basePos, baseState.setValue(EXTENDED, Boolean.valueOf(true)), 67);
             level.playSound((Player)null, basePos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.25F + 0.6F);
             level.gameEvent((Entity)null, GameEvent.PISTON_EXTEND, basePos);
-        } else if (extensionFlag == 1 || extensionFlag == 2) {
+        } else if (extensionFlag == PistonBaseBlock.TRIGGER_CONTRACT || extensionFlag == PistonBaseBlock.TRIGGER_DROP) {
             if (ForgeEventFactory.onPistonMovePre(level, basePos, pistonDirection, false)) return false;
             BlockEntity blockentity1 = level.getBlockEntity(basePos.relative(pistonDirection));
             if (blockentity1 instanceof PistonMovingBlockEntity) {
@@ -306,7 +306,11 @@ public class SuperchargedPistonBaseBlock extends PistonBaseBlock {
                 }
 
                 if (!flag1) {
-                    if (extensionFlag != 1 || blockstate1.isAir() || !isPushable(blockstate1, level, blockpos, pistonDirection.getOpposite(), false, pistonDirection) || blockstate1.getPistonPushReaction() != PushReaction.NORMAL && !blockstate1.is(Blocks.PISTON) && !blockstate1.is(Blocks.STICKY_PISTON)) {
+                    if (extensionFlag != 1 || blockstate1.isAir() ||
+                            !isPushable(blockstate1, level, blockpos, pistonDirection.getOpposite(), false, pistonDirection) ||
+                            (blockstate1.getPistonPushReaction() != PushReaction.NORMAL && !blockstate1.is(Blocks.PISTON) &&
+                                    !blockstate1.is(Blocks.STICKY_PISTON) && !blockstate1.is(SUPERCHARGED_PISTON_BASE_BLOCK.get()) &&
+                                    !blockstate1.is(STICKY_SUPERCHARGED_PISTON_BASE_BLOCK.get()))) {
                         level.removeBlock(basePos.relative(pistonDirection), false);
                     } else {
                         moveBlocks(level, basePos, pistonDirection, false);
