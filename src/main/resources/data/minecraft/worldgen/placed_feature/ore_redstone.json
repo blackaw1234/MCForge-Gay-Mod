@@ -1,0 +1,12 @@
+{
+  "feature": "minecraft:ore_redstone",
+  "placement": [
+    {
+      "type": "minecraft:count_on_every_layer",
+      "count": {
+        "type": "constant",
+        "value": 256
+      }
+    }
+  ]
+}
