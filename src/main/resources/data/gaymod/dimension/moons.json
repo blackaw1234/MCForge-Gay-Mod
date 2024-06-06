@@ -2,7 +2,7 @@
   "type": "gaymod:sky",
   "generator": {
     "type": "minecraft:noise",
-    "settings": "minecraft:floating_islands",
+    "settings": "minecraft:caves",
     "biome_source": {
       "type": "minecraft:multi_noise",
       "biomes": [
