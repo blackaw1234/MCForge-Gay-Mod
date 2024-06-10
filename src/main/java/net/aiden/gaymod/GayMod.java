@@ -3,6 +3,8 @@ package net.aiden.gaymod;
 import com.mojang.logging.LogUtils;
 import net.aiden.gaymod.block.ModBlocks;
 import net.aiden.gaymod.item.ModItems;
+import net.aiden.gaymod.world.feature.ModConfiguredFeatures;
+import net.aiden.gaymod.world.feature.ModPlacedFeatures;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,6 +27,9 @@ public class GayMod
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+
+        ModConfiguredFeatures.register(modEventBus);
+        ModPlacedFeatures.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 
