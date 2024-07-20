@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": ["gaymod:asteroid_field"],
+  "features": "gaymod:moon_ancient_debris_placed",
+  "step": "underground_ores"
+}

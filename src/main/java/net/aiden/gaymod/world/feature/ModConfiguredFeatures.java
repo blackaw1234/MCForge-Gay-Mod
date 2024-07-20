@@ -3,6 +3,7 @@ package net.aiden.gaymod.world.feature;
 import com.google.common.base.Suppliers;
 import net.aiden.gaymod.GayMod;
 import net.minecraft.core.Registry;
+import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -21,9 +22,16 @@ public class ModConfiguredFeatures {
     public static final Supplier<List<OreConfiguration.TargetBlockState>> ENDSTONE_REDSTONE_ORE = Suppliers.memoize(() -> List.of(
             OreConfiguration.target(new BlockMatchTest(Blocks.END_STONE), Blocks.REDSTONE_ORE.defaultBlockState())));
 
+    public static final Supplier<List<OreConfiguration.TargetBlockState>> STONE_ANCIENT_DEBRIS = Suppliers.memoize(() -> List.of(
+            OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, Blocks.ANCIENT_DEBRIS.defaultBlockState())));
+
     public static final RegistryObject<ConfiguredFeature<?, ?>> END_REDSTONE_ORE = CONFIGURED_FEATURES.register(
             "end_redstone_ore", () -> new ConfiguredFeature<>(Feature.ORE,
                     new OreConfiguration(ENDSTONE_REDSTONE_ORE.get(), 7)));
+
+    public static final RegistryObject<ConfiguredFeature<?, ?>> MOON_ANCIENT_DEBRIS = CONFIGURED_FEATURES.register(
+            "moon_ancient_debris", () -> new ConfiguredFeature<>(Feature.ORE,
+                    new OreConfiguration(STONE_ANCIENT_DEBRIS.get(), 7)));
 
 
     public static void register(IEventBus eventBus)

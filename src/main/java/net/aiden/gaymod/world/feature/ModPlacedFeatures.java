@@ -20,6 +20,12 @@ public class ModPlacedFeatures {
                             HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-80),
                                     VerticalAnchor.aboveBottom(80)))));
 
+    public static final RegistryObject<PlacedFeature> MOON_ANCIENT_DEBRIS_PLACED = PLACED_FEATURES.register(
+            "moon_ancient_debris_placed", () -> new PlacedFeature(ModConfiguredFeatures.MOON_ANCIENT_DEBRIS.getHolder().get(),
+                    commonOrePlacement(7,
+                            HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-80),
+                                    VerticalAnchor.aboveBottom(80)))));
+
     private static List<PlacementModifier> orePlacement(PlacementModifier p_195347_, PlacementModifier p_195348_) {
         return List.of(p_195347_, InSquarePlacement.spread(), p_195348_, BiomeFilter.biome());
     }
