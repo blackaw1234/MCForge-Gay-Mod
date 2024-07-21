@@ -3,6 +3,7 @@ package net.aiden.gaymod;
 import com.mojang.logging.LogUtils;
 import net.aiden.gaymod.block.ModBlocks;
 import net.aiden.gaymod.item.ModItems;
+import net.aiden.gaymod.world.biome.ModBiomes;
 import net.aiden.gaymod.world.feature.ModConfiguredFeatures;
 import net.aiden.gaymod.world.feature.ModPlacedFeatures;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,6 +31,7 @@ public class GayMod
 
         ModConfiguredFeatures.register(modEventBus);
         ModPlacedFeatures.register(modEventBus);
+        ModBiomes.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 

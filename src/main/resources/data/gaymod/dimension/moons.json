@@ -1,24 +1,10 @@
 {
   "type": "gaymod:sky",
   "generator": {
-    "type": "minecraft:noise",
-    "settings": "minecraft:caves",
-    "biome_source": {
-      "type": "minecraft:multi_noise",
-      "biomes": [
-        {
-          "biome": "gaymod:asteroid_field",
-          "parameters": {
-            "continentalness": -1,
-            "depth": 0,
-            "erosion": 1,
-            "humidity": 0,
-            "offset": 0.5,
-            "temperature": 0,
-            "weirdness": 0.1
-          }
-        }
-      ]
+    "type": "minecraft:flat",
+    "settings": {
+      "layers": [],
+      "biome": "gaymod:asteroid_field"
     }
   }
 }
